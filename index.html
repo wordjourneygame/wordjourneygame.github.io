@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Word Journey – Help me find this word!</title>
+<meta name="description" content="Can you find the word? Play a Word Journey puzzle right in your browser.">
+<meta property="og:title" content="Can you help me find this word? 🦉">
+<meta property="og:description" content="Word Journey – play the puzzle right in your browser, no download needed.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://wordjourneygame.github.io/tiki.png">
+<meta name="theme-color" content="#20140d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#2b1b11; --bg2:#160e09; --cream:#fbf3e4; --cream2:#f1e3c8; --brown:#4a2f1e; --muted:#8a7360;
+  --orange:#f28c28; --orange2:#e06d10; --green:#2f9e57; --red:#d64532; --box:#ffffff22; --boxb:#ffffff66;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:#160e09;min-height:100%}
+body{margin:0;min-height:100vh}
+body{
+  font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  color:var(--cream);
+  background:radial-gradient(120% 60% at 50% 0%,#3d2716 0%,var(--bg1) 45%,var(--bg2) 100%) no-repeat,var(--bg2);
+  display:flex;justify-content:center;
+}
+.app{width:100%;max-width:440px;padding:14px 16px 28px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.top{width:100%;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.3px}
+.brand .w{color:#fff}.brand .j{color:#ffc04d}
+.tiki{width:40px;height:40px;object-fit:contain}
+.tiki-emoji{font-size:30px;line-height:40px}
+.getapp{font-size:12px;color:#ffd79a;text-decoration:none;border:1px solid #ffd79a66;border-radius:999px;padding:5px 10px;white-space:nowrap}
+h1{font-size:22px;margin:4px 0 0;text-align:center;line-height:1.25}
+.sub{margin:0;text-align:center;color:#f0dcc0;font-size:14px;line-height:1.4}
+.hint{width:100%;background:var(--cream);color:var(--brown);border-radius:22px;padding:14px 18px 14px 22px;position:relative;box-shadow:0 6px 18px #0006}
+.hint:before{content:"";position:absolute;left:10px;top:16px;bottom:16px;width:4px;border-radius:4px;background:linear-gradient(var(--orange),#ffb347)}
+html[dir=rtl] .hint{padding:14px 22px 14px 18px}
+html[dir=rtl] .hint:before{left:auto;right:10px}
+.hint .lbl{font-size:12px;font-weight:700;color:var(--orange2);letter-spacing:1.5px;text-transform:uppercase;display:flex;gap:8px;align-items:center}
+.hint .en{background:#00000012;color:var(--muted);border-radius:6px;padding:1px 6px;font-size:11px;letter-spacing:.5px}
+.hint .txt{font-size:20px;font-weight:600;margin:6px 0 2px;line-height:1.3;direction:ltr;text-align:left}
+html[dir=rtl] .hint .txt{text-align:right}
+.hint .meta{font-size:13px;color:var(--muted)}
+.boxes{display:flex;gap:5px;justify-content:center;direction:ltr;margin-top:4px;flex-wrap:nowrap}
+.box{border-radius:9px;background:var(--box);border:1.5px solid var(--boxb);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--brown)}
+.box.fill{background:var(--cream);border-color:var(--cream)}
+.box.pre{background:#ffe7bf;border-color:#ffe7bf}
+.box.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.6)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.current{min-height:40px;display:flex;align-items:center;justify-content:center;direction:ltr}
+.current span{background:var(--orange);color:#fff;font-weight:700;font-size:20px;letter-spacing:3px;padding:4px 14px;border-radius:12px;box-shadow:0 3px 0 var(--orange2)}
+.msg{min-height:20px;font-size:14px;color:#ffd0c4;text-align:center}
+.wheel{position:relative;border-radius:50%;background:radial-gradient(circle,#00000055 0%,#00000033 60%,#0000 72%);touch-action:none;user-select:none;-webkit-user-select:none}
+.wheel svg{position:absolute;inset:0;pointer-events:none}
+.ltr{position:absolute;border-radius:50%;background:var(--cream);color:var(--brown);font-weight:600;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #c9b38f,0 6px 12px #0005;transition:transform .12s,background .12s}
+.ltr.on{background:var(--orange);color:#fff;box-shadow:0 4px 0 var(--orange2),0 6px 12px #0005;transform:scale(1.06)}
+.locked .ltr{opacity:.55}
+.controls{display:flex;gap:10px}
+.btn{font-family:inherit;border:0;border-radius:16px;padding:12px 18px;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.small{padding:8px 14px;font-size:13px;border-radius:12px;background:#ffffff1a;color:var(--cream)}
+.btn.primary{background:linear-gradient(#ffa040,var(--orange));color:#fff;box-shadow:0 4px 0 var(--orange2)}
+.btn.wa{background:#25d366;color:#fff;box-shadow:0 4px 0 #18a34c}
+.btn.tg{background:#2aa1da;color:#fff;box-shadow:0 4px 0 #1b7fb0}
+.btn.ghost{background:#ffffff14;color:var(--cream);border:1px solid #ffffff33}
+.card .btn.ghost{background:#fff;color:var(--brown);border:1px solid #d8c3a0}
+.card{width:100%;background:var(--cream);color:var(--brown);border-radius:22px;padding:18px;box-shadow:0 8px 22px #0007;display:flex;flex-direction:column;gap:10px;align-items:stretch;text-align:center}
+.card h2{margin:0;font-size:20px}
+.reply{background:#fff;border:1px dashed #d8c3a0;border-radius:14px;padding:10px 12px;font-size:15px;direction:auto}
+.note{font-size:12px;color:var(--muted)}
+.cta{width:100%;display:flex;flex-direction:column;gap:8px;align-items:stretch;text-align:center}
+.cta .t{font-weight:600;font-size:16px}
+.ios{background:#ffffff14;border-radius:14px;padding:10px;font-size:14px}
+.hidden{display:none!important}
+.progress{font-size:13px;color:#ffd79a;font-weight:600}
+canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:9}
+footer{font-size:11px;color:#c9b39a99;text-align:center;margin-top:6px}
+</style>
+</head>
+<body>
+<canvas id="cf"></canvas>
+<main class="app">
+  <div class="top">
+    <div class="brand"><img class="tiki" src="tiki.png" alt="" onerror="this.outerHTML='<span class=&quot;tiki-emoji&quot;>🦉</span>'"><span><span class="w">WORD</span> <span class="j">JOURNEY</span></span></div>
+    <a class="getapp" id="topGet" href="#"></a>
+  </div>
+
+  <div class="progress hidden" id="progress"></div>
+  <h1 id="title"></h1>
+  <p class="sub" id="sub"></p>
+
+  <div class="hint" id="hintCard">
+    <div class="lbl"><span id="hintLbl"></span><span class="en">EN</span></div>
+    <div class="txt" id="hintTxt"></div>
+    <div class="meta" id="hintMeta"></div>
+  </div>
+
+  <div class="boxes" id="boxes"></div>
+  <div class="current" id="current"></div>
+  <div class="wheel" id="wheel"><svg id="line"></svg></div>
+  <div class="controls" id="controls">
+    <button class="btn small" id="shuffleBtn">🔀 <span id="shuffleLbl"></span></button>
+    <button class="btn small" id="clearBtn">✕ <span id="clearLbl"></span></button>
+  </div>
+  <div class="msg" id="msg"></div>
+
+  <section class="card hidden" id="success">
+    <h2 id="foundTitle"></h2>
+    <div class="reply" id="replyTxt"></div>
+    <div id="replyBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+  </section>
+
+  <section class="card hidden" id="nextCard">
+    <h2 id="nextTitle"></h2>
+    <button class="btn primary" id="nextBtn"></button>
+  </section>
+
+  <section class="cta hidden" id="cta">
+    <div class="t" id="ctaTitle"></div>
+    <a class="btn primary" id="ctaBtn" href="#"></a>
+    <div class="note" id="ctaNote"></div>
+    <div class="ios hidden" id="iosNote"></div>
+  </section>
+
+  <footer>Word Journey</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+var PKG = "com.rork.wordjourney";
+var SALT = "wj1:";
+
+/* ---------- Texts (15 languages) ---------- */
+var K = ["title_friend","sub_friend","hint","letters","howto","wrong","found","reply_msg","send_wa","send_tg","send_other","copy","copied","cta_title","cta_btn","android_only","ios_soon","demo_title","demo_progress","next","demo_end","shuffle","clear","bad_link","get_app"];
+var L = {
+en:["Help your friend!","Your friend is stuck on this word. Can you find it?","Hint","{n} letters","Swipe or tap the letters to make the word","Not quite – try again!","You found it! 🎉","I found it! 🎉 The answer is: {w}","Send on WhatsApp","Send on Telegram","Share the answer","Copy the answer","Copied!","Enjoyed it? Play 20,000 more puzzles!","Get Word Journey – free","Free on Android","iPhone version coming soon 🦉","Try Word Journey!","Puzzle {i} of {t}","Next puzzle","Great job! 🦉 20,000 more puzzles are waiting for you.","Shuffle","Clear","This link looks broken. Try a few puzzles instead!","Get the app"],
+tr:["Arkadaşına yardım et!","Arkadaşın bu kelimede takıldı. Sen bulabilir misin?","İpucu","{n} harf","Kelimeyi oluşturmak için harfleri kaydır ya da dokun","Olmadı – tekrar dene!","Buldun! 🎉","Buldum! 🎉 Cevap: {w}","WhatsApp'tan gönder","Telegram'dan gönder","Cevabı paylaş","Cevabı kopyala","Kopyalandı!","Beğendin mi? 20.000 bulmaca daha seni bekliyor!","Word Journey'i ücretsiz indir","Android'de ücretsiz","iPhone sürümü yakında 🦉","Word Journey'i dene!","Bulmaca {i}/{t}","Sonraki bulmaca","Harika! 🦉 20.000 bulmaca daha seni bekliyor.","Karıştır","Temizle","Bu link bozuk görünüyor. Birkaç bulmaca deneyebilirsin!","Uygulamayı indir"],
+es:["¡Ayuda a tu amigo!","Tu amigo se atascó en esta palabra. ¿Puedes encontrarla?","Pista","{n} letras","Desliza o toca las letras para formar la palabra","Casi – ¡inténtalo de nuevo!","¡La encontraste! 🎉","¡La encontré! 🎉 La respuesta es: {w}","Enviar por WhatsApp","Enviar por Telegram","Compartir la respuesta","Copiar la respuesta","¡Copiado!","¿Te gustó? ¡Juega 20.000 puzzles más!","Descarga Word Journey gratis","Gratis en Android","Versión para iPhone muy pronto 🦉","¡Prueba Word Journey!","Puzzle {i} de {t}","Siguiente puzzle","¡Muy bien! 🦉 Te esperan 20.000 puzzles más.","Mezclar","Borrar","Este enlace parece roto. ¡Prueba unos puzzles!","Descargar"],
+pt:["Ajude seu amigo!","Seu amigo travou nesta palavra. Você consegue encontrá-la?","Dica","{n} letras","Deslize ou toque nas letras para formar a palavra","Quase – tente de novo!","Você encontrou! 🎉","Encontrei! 🎉 A resposta é: {w}","Enviar pelo WhatsApp","Enviar pelo Telegram","Compartilhar a resposta","Copiar a resposta","Copiado!","Gostou? Jogue mais 20.000 quebra-cabeças!","Baixe o Word Journey grátis","Grátis no Android","Versão para iPhone em breve 🦉","Experimente o Word Journey!","Quebra-cabeça {i} de {t}","Próximo quebra-cabeça","Muito bem! 🦉 Mais 20.000 quebra-cabeças esperam por você.","Embaralhar","Limpar","Este link parece quebrado. Experimente alguns quebra-cabeças!","Baixar o app"],
+fr:["Aide ton ami !","Ton ami bloque sur ce mot. Peux-tu le trouver ?","Indice","{n} lettres","Glisse ou touche les lettres pour former le mot","Pas tout à fait – réessaie !","Tu l’as trouvé ! 🎉","Trouvé ! 🎉 La réponse est : {w}","Envoyer sur WhatsApp","Envoyer sur Telegram","Partager la réponse","Copier la réponse","Copié !","Ça t’a plu ? Joue à 20 000 autres puzzles !","Télécharge Word Journey gratuitement","Gratuit sur Android","Version iPhone bientôt disponible 🦉","Essaie Word Journey !","Puzzle {i} sur {t}","Puzzle suivant","Bravo ! 🦉 20 000 autres puzzles t’attendent.","Mélanger","Effacer","Ce lien semble cassé. Essaie quelques puzzles !","Télécharger"],
+de:["Hilf deinem Freund!","Dein Freund hängt bei diesem Wort fest. Findest du es?","Hinweis","{n} Buchstaben","Wische oder tippe auf die Buchstaben, um das Wort zu bilden","Nicht ganz – versuch es noch mal!","Gefunden! 🎉","Ich hab’s! 🎉 Die Antwort ist: {w}","Per WhatsApp senden","Per Telegram senden","Antwort teilen","Antwort kopieren","Kopiert!","Hat’s Spaß gemacht? Spiele 20.000 weitere Rätsel!","Word Journey kostenlos laden","Kostenlos für Android","iPhone-Version kommt bald 🦉","Probier Word Journey aus!","Rätsel {i} von {t}","Nächstes Rätsel","Super! 🦉 20.000 weitere Rätsel warten auf dich.","Mischen","Löschen","Dieser Link scheint kaputt zu sein. Probier ein paar Rätsel!","App laden"],
+ru:["Помоги другу!","Твой друг застрял на этом слове. Сможешь его найти?","Подсказка","Букв: {n}","Проведи по буквам или нажимай на них, чтобы составить слово","Не совсем – попробуй ещё раз!","Слово найдено! 🎉","Есть ответ! 🎉 Это: {w}","Отправить в WhatsApp","Отправить в Telegram","Поделиться ответом","Скопировать ответ","Скопировано!","Понравилось? Ещё 20 000 головоломок ждут тебя!","Скачать Word Journey бесплатно","Бесплатно на Android","Версия для iPhone скоро 🦉","Попробуй Word Journey!","Головоломка {i} из {t}","Следующая головоломка","Отлично! 🦉 Тебя ждут ещё 20 000 головоломок.","Перемешать","Очистить","Похоже, ссылка повреждена. Попробуй несколько головоломок!","Скачать"],
+id:["Bantu temanmu!","Temanmu buntu di kata ini. Bisakah kamu menemukannya?","Petunjuk","{n} huruf","Geser atau ketuk huruf untuk membentuk kata","Belum tepat – coba lagi!","Kamu menemukannya! 🎉","Ketemu! 🎉 Jawabannya: {w}","Kirim lewat WhatsApp","Kirim lewat Telegram","Bagikan jawaban","Salin jawaban","Tersalin!","Suka? Mainkan 20.000 teka-teki lagi!","Unduh Word Journey gratis","Gratis di Android","Versi iPhone segera hadir 🦉","Coba Word Journey!","Teka-teki {i} dari {t}","Teka-teki berikutnya","Hebat! 🦉 20.000 teka-teki lagi menunggumu.","Acak","Hapus","Tautan ini sepertinya rusak. Coba beberapa teka-teki!","Unduh aplikasi"],
+vi:["Giúp bạn của bạn!","Bạn của bạn đang bí ở từ này. Bạn tìm ra được không?","Gợi ý","{n} chữ cái","Vuốt hoặc chạm vào các chữ cái để tạo thành từ","Chưa đúng – thử lại nhé!","Bạn đã tìm ra! 🎉","Tìm ra rồi! 🎉 Đáp án là: {w}","Gửi qua WhatsApp","Gửi qua Telegram","Chia sẻ đáp án","Sao chép đáp án","Đã sao chép!","Thích không? Chơi thêm 20.000 câu đố nữa!","Tải Word Journey miễn phí","Miễn phí trên Android","Phiên bản iPhone sắp ra mắt 🦉","Thử Word Journey!","Câu đố {i}/{t}","Câu đố tiếp theo","Tuyệt vời! 🦉 20.000 câu đố nữa đang chờ bạn.","Xáo trộn","Xóa","Liên kết này có vẻ bị lỗi. Hãy thử vài câu đố nhé!","Tải ứng dụng"],
+ar:["ساعد صديقك!","صديقك عالق في هذه الكلمة. هل يمكنك العثور عليها؟","تلميح","عدد الحروف: {n}","اسحب أو اضغط على الحروف لتكوين الكلمة","ليس تمامًا – حاول مرة أخرى!","وجدتها! 🎉","وجدتها! 🎉 الإجابة هي: {w}","أرسل عبر واتساب","أرسل عبر تيليجرام","شارك الإجابة","انسخ الإجابة","تم النسخ!","هل أعجبتك؟ العب 20,000 لغز آخر!","حمّل Word Journey مجانًا","مجاني على أندرويد","نسخة الآيفون قريبًا 🦉","جرّب Word Journey!","اللغز {i} من {t}","اللغز التالي","رائع! 🦉 20,000 لغز آخر بانتظارك.","خلط","مسح","يبدو أن هذا الرابط معطل. جرّب بعض الألغاز!","حمّل التطبيق"],
+hi:["अपने दोस्त की मदद करें!","आपका दोस्त इस शब्द पर अटक गया है। क्या आप इसे ढूंढ सकते हैं?","संकेत","{n} अक्षर","शब्द बनाने के लिए अक्षरों पर स्वाइप या टैप करें","सही नहीं – फिर से कोशिश करें!","आपने ढूंढ लिया! 🎉","मिल गया! 🎉 जवाब है: {w}","WhatsApp पर भेजें","Telegram पर भेजें","जवाब शेयर करें","जवाब कॉपी करें","कॉपी हो गया!","मज़ा आया? 20,000 और पहेलियाँ खेलें!","Word Journey मुफ़्त डाउनलोड करें","Android पर मुफ़्त","iPhone वर्ज़न जल्द आ रहा है 🦉","Word Journey आज़माएँ!","पहेली {i} / {t}","अगली पहेली","बहुत बढ़िया! 🦉 20,000 और पहेलियाँ आपका इंतज़ार कर रही हैं।","मिलाएँ","मिटाएँ","यह लिंक टूटा हुआ लगता है। कुछ पहेलियाँ आज़माएँ!","ऐप पाएँ"],
+th:["ช่วยเพื่อนของคุณ!","เพื่อนของคุณติดอยู่ที่คำนี้ คุณหาเจอไหม?","คำใบ้","{n} ตัวอักษร","ปัดหรือแตะตัวอักษรเพื่อสร้างคำ","ยังไม่ใช่ – ลองอีกครั้ง!","คุณหาเจอแล้ว! 🎉","เจอแล้ว! 🎉 คำตอบคือ: {w}","ส่งทาง WhatsApp","ส่งทาง Telegram","แชร์คำตอบ","คัดลอกคำตอบ","คัดลอกแล้ว!","ชอบไหม? เล่นปริศนาอีก 20,000 ข้อ!","ดาวน์โหลด Word Journey ฟรี","ฟรีบน Android","เวอร์ชัน iPhone เร็ว ๆ นี้ 🦉","ลองเล่น Word Journey!","ปริศนา {i} จาก {t}","ปริศนาถัดไป","เยี่ยมมาก! 🦉 ปริศนาอีก 20,000 ข้อรอคุณอยู่","สลับ","ล้าง","ลิงก์นี้ดูเหมือนจะเสีย ลองเล่นปริศนาสักสองสามข้อสิ!","รับแอป"],
+ko:["친구를 도와주세요!","친구가 이 단어에서 막혔어요. 찾을 수 있나요?","힌트","{n}글자","글자를 밀거나 눌러서 단어를 만드세요","아쉬워요 – 다시 해 보세요!","찾았어요! 🎉","찾았어! 🎉 정답은: {w}","WhatsApp으로 보내기","Telegram으로 보내기","정답 공유하기","정답 복사하기","복사됐어요!","재미있었나요? 퍼즐 20,000개가 더 있어요!","Word Journey 무료 다운로드","Android에서 무료","iPhone 버전 곧 출시 🦉","Word Journey를 해 보세요!","퍼즐 {i}/{t}","다음 퍼즐","잘했어요! 🦉 퍼즐 20,000개가 더 기다리고 있어요.","섞기","지우기","링크가 손상된 것 같아요. 퍼즐 몇 개를 풀어 보세요!","앱 받기"],
+zh:["帮帮你的朋友！","你的朋友卡在这个单词上了。你能找到它吗？","提示","{n} 个字母","滑动或点击字母来拼出单词","不太对——再试一次！","你找到了！🎉","我找到了！🎉 答案是：{w}","通过 WhatsApp 发送","通过 Telegram 发送","分享答案","复制答案","已复制！","喜欢吗？还有 20,000 个谜题等你玩！","免费下载 Word Journey","Android 版免费","iPhone 版即将推出 🦉","试试 Word Journey！","谜题 {i}/{t}","下一个谜题","太棒了！🦉 还有 20,000 个谜题在等你。","打乱","清除","这个链接好像坏了。来玩几个谜题吧！","下载应用"],
+zht:["幫幫你的朋友！","你的朋友卡在這個單字上了。你能找到它嗎？","提示","{n} 個字母","滑動或點擊字母來拼出單字","不太對——再試一次！","你找到了！🎉","我找到了！🎉 答案是：{w}","透過 WhatsApp 傳送","透過 Telegram 傳送","分享答案","複製答案","已複製！","喜歡嗎？還有 20,000 個謎題等你玩！","免費下載 Word Journey","Android 版免費","iPhone 版即將推出 🦉","試試 Word Journey！","謎題 {i}/{t}","下一個謎題","太棒了！🦉 還有 20,000 個謎題在等你。","打亂","清除","這個連結好像壞了。來玩幾個謎題吧！","下載 App"],
+ja:["友だちを助けよう！","友だちがこの単語で困っています。見つけられるかな？","ヒント","{n}文字","文字をなぞるかタップして単語を作ろう","おしい！もう一度やってみよう！","見つけた！🎉","わかった！🎉 答えは：{w}","WhatsAppで送る","Telegramで送る","答えをシェア","答えをコピー","コピーしました！","楽しかった？あと20,000問のパズルが待ってるよ！","Word Journeyを無料でダウンロード","Androidで無料","iPhone版は近日公開 🦉","Word Journeyを試してみよう！","パズル {i}/{t}","次のパズル","すごい！🦉 あと20,000問のパズルが待ってるよ。","シャッフル","クリア","このリンクは壊れているようです。パズルをいくつか遊んでみてね！","アプリを入手"]
+};
+
+/* Demo puzzles – PLACEHOLDERS, replace with 5 easy puzzles chosen by the teacher.
+   w = wheel letters (scrambled), a = answer, h = English hint */
+var DEMO = [
+  {w:"OKBO",   a:"BOOK",   h:"you read it"},
+  {w:"TEWRA",  a:"WATER",  h:"you drink it when you are thirsty"},
+  {w:"PYAPH",  a:"HAPPY",  h:"feeling good and smiling"},
+  {w:"DNEIRF", a:"FRIEND", h:"a person you like and trust"},
+  {w:"LVRTAE", a:"TRAVEL", h:"to go on a journey to other places"}
+];
+
+/* ---------- Helpers ---------- */
+var params = new URLSearchParams(location.search);
+function pickLang(){
+  var o = (params.get("lang")||"").toLowerCase();
+  if (o === "zh-tw" || o === "zht") return "zht";
+  if (o && L[o.slice(0,2)]) return o.slice(0,2);
+  var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language||"en"];
+  for (var i=0;i<list.length;i++){
+    var l = String(list[i]).toLowerCase();
+    if (l.indexOf("zh")===0 && /(tw|hk|mo|hant)/.test(l)) return "zht";
+    var b = l.slice(0,2);
+    if (L[b]) return b;
+  }
+  return "en";
+}
+var lang = pickLang();
+if (lang === "ar"){ document.documentElement.dir = "rtl"; }
+document.documentElement.lang = lang === "zht" ? "zh-TW" : lang;
+function t(key, vars){
+  var i = K.indexOf(key), s = (L[lang]||L.en)[i] || L.en[i];
+  if (vars) for (var k in vars) s = s.split("{"+k+"}").join(vars[k]);
+  return s;
+}
+function $(id){ return document.getElementById(id); }
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+function storeUrl(src){
+  var ref = "utm_source=" + src + "&utm_medium=web";
+  var camp = (params.get("c")||"").replace(/[^a-zA-Z0-9_-]/g,"").slice(0,40);
+  if (camp) ref += "&utm_campaign=" + camp;
+  return "https://play.google.com/store/apps/details?id=" + PKG + "&referrer=" + encodeURIComponent(ref);
+}
+function b64urlDecode(s){
+  s = s.replace(/-/g,"+").replace(/_/g,"/");
+  while (s.length % 4) s += "=";
+  var bin = atob(s), bytes = new Uint8Array(bin.length);
+  for (var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function hash(word){
+  var data = new TextEncoder().encode(SALT + word.toLowerCase());
+  return crypto.subtle.digest("SHA-256", data).then(function(buf){
+    var a = new Uint8Array(buf), h = "";
+    for (var i=0;i<8;i++) h += ("0"+a[i].toString(16)).slice(-2);
+    return h;
+  });
+}
+
+/* ---------- Parse friend payload ---------- */
+function parsePayload(){
+  var m = location.hash.match(/[#&]d=([A-Za-z0-9_-]+)/);
+  if (!m) return null;
+  try{
+    var o = JSON.parse(b64urlDecode(m[1]));
+    var w = String(o.w||"").toUpperCase(), n = parseInt(o.n,10), h = String(o.h||""), a = String(o.a||"").toLowerCase();
+    var r = o.r ? String(o.r).toUpperCase() : "";
+    if (!/^[A-Z]{2,20}$/.test(w)) return "bad";
+    if (!(n>=2 && n<=20 && n<=w.length)) return "bad";
+    if (!/^[0-9a-f]{16}$/.test(a)) return "bad";
+    if (h.length > 160) h = h.slice(0,160);
+    if (r && (r.length !== n || !/^[A-Z_]+$/.test(r))) r = "";
+    var c = String(o.c||"").toLowerCase();
+    return {w:w, n:n, h:h, a:a, r:r, c:c};
+  }catch(e){ return "bad"; }
+}
+
+/* ---------- State ---------- */
+var payload = parsePayload();
+var mode = (payload && payload !== "bad") ? "friend" : "demo";
+var demoIdx = 0, cur = null, letters = [], path = [], tapSeq = [], locked = false, dragging = false, pointer = null;
+
+/* ---------- Static texts ---------- */
+$("topGet").textContent = t("get_app");
+$("topGet").href = isIOS ? "#" : storeUrl(mode === "friend" ? "ask_friend" : "demo");
+if (isIOS) $("topGet").addEventListener("click", function(e){ e.preventDefault(); $("cta").classList.remove("hidden"); $("cta").scrollIntoView({behavior:"smooth", block:"center"}); });
+$("hintLbl").textContent = t("hint");
+$("shuffleLbl").textContent = t("shuffle");
+$("clearLbl").textContent = t("clear");
+$("ctaTitle").textContent = t("cta_title");
+$("ctaBtn").textContent = t("cta_btn");
+$("ctaBtn").href = storeUrl(mode === "friend" ? "ask_friend" : "demo");
+$("ctaNote").textContent = t("android_only");
+$("iosNote").textContent = t("ios_soon");
+if (isIOS){ $("ctaBtn").classList.add("hidden"); $("ctaNote").classList.add("hidden"); $("iosNote").classList.remove("hidden"); }
+
+/* ---------- Puzzle setup ---------- */
+function loadPuzzle(p){
+  cur = p; locked = false; path = []; tapSeq = [];
+  $("wheel").classList.remove("locked");
+  letters = p.w.split("");
+  renderBoxes(); renderWheel(); renderCurrent(); setMsg("");
+  $("hintTxt").textContent = p.h;
+  $("hintMeta").textContent = t("letters", {n: p.n});
+}
+function startFriend(){
+  $("title").textContent = t("title_friend");
+  $("sub").textContent = t("sub_friend");
+  loadPuzzle(payload);
+}
+function startDemo(i){
+  demoIdx = i;
+  var d = DEMO[i];
+  $("title").textContent = t("demo_title");
+  $("sub").textContent = payload === "bad" && i === 0 ? t("bad_link") : t("howto");
+  $("progress").classList.remove("hidden");
+  $("progress").textContent = t("demo_progress", {i: i+1, t: DEMO.length});
+  $("nextCard").classList.add("hidden");
+  hash(d.a).then(function(h){ loadPuzzle({w:d.w, n:d.a.length, h:d.h, a:h, r:""}); });
+}
+
+/* ---------- Rendering ---------- */
+function boxSize(n){ var avail = Math.min(window.innerWidth, 440) - 32; return Math.max(22, Math.min(44, Math.floor((avail - (n-1)*5)/n))); }
+function renderBoxes(fillWord){
+  var el = $("boxes"); el.innerHTML = "";
+  var s = boxSize(cur.n);
+  for (var i=0;i<cur.n;i++){
+    var b = document.createElement("div");
+    b.className = "box";
+    b.style.width = s+"px"; b.style.height = Math.round(s*1.15)+"px"; b.style.fontSize = Math.round(s*0.55)+"px";
+    var pre = cur.r && cur.r[i] !== "_" ? cur.r[i] : "";
+    if (fillWord){ b.textContent = fillWord[i]; b.className = "box fill pop"; b.style.animationDelay = (i*45)+"ms"; }
+    else if (pre){ b.textContent = pre; b.className = "box pre"; }
+    el.appendChild(b);
+  }
+}
+var geom = {size:0, btn:0, centers:[]};
+function renderWheel(){
+  var w = $("wheel");
+  Array.prototype.slice.call(w.querySelectorAll(".ltr")).forEach(function(x){ x.remove(); });
+  var k = letters.length;
+  var size = Math.min(Math.min(window.innerWidth, 440) - 40, 320);
+  var btn = k<=5 ? 62 : k<=7 ? 56 : k<=9 ? 50 : k<=12 ? 44 : k<=15 ? 39 : 34;
+  var R = size/2 - btn/2 - 4;
+  w.style.width = size+"px"; w.style.height = size+"px";
+  geom = {size:size, btn:btn, centers:[]};
+  for (var i=0;i<k;i++){
+    var ang = (-90 + 360*i/k) * Math.PI/180;
+    var cx = size/2 + R*Math.cos(ang), cy = size/2 + R*Math.sin(ang);
+    geom.centers.push([cx,cy]);
+    var b = document.createElement("div");
+    b.className = "ltr"; b.textContent = letters[i]; b.dataset.i = i;
+    b.style.width = btn+"px"; b.style.height = btn+"px"; b.style.fontSize = Math.round(btn*0.46)+"px";
+    b.style.left = (cx-btn/2)+"px"; b.style.top = (cy-btn/2)+"px";
+    w.appendChild(b);
+  }
+  $("line").setAttribute("viewBox","0 0 "+size+" "+size);
+  highlight();
+}
+function activeSeq(){ return dragging ? path : tapSeq; }
+function highlight(){
+  var seq = activeSeq();
+  Array.prototype.forEach.call($("wheel").querySelectorAll(".ltr"), function(el){
+    el.classList.toggle("on", seq.indexOf(+el.dataset.i) >= 0);
+  });
+  var svg = $("line"), pts = seq.map(function(i){ return geom.centers[i].join(","); });
+  if (dragging && pointer && seq.length) pts.push(pointer.join(","));
+  svg.innerHTML = pts.length > 1 ? '<polyline points="'+pts.join(" ")+'" fill="none" stroke="#f28c28" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>' : "";
+}
+function renderCurrent(){
+  var seq = activeSeq();
+  var word = seq.map(function(i){ return letters[i]; }).join("");
+  $("current").innerHTML = word ? "<span></span>" : "";
+  if (word) $("current").firstChild.textContent = word;
+}
+function setMsg(s){ $("msg").textContent = s; }
+
+/* ---------- Input ---------- */
+function hitTest(x, y){
+  for (var i=0;i<geom.centers.length;i++){
+    var c = geom.centers[i], dx = x-c[0], dy = y-c[1];
+    if (dx*dx + dy*dy <= Math.pow(geom.btn*0.55, 2)) return i;
+  }
+  return -1;
+}
+function localXY(e){ var r = $("wheel").getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+var startIdx = -1, movedOff = false;
+$("wheel").addEventListener("pointerdown", function(e){
+  if (locked) return;
+  var p = localXY(e), i = hitTest(p[0], p[1]);
+  if (i < 0) return;
+  e.preventDefault();
+  try{ $("wheel").setPointerCapture(e.pointerId); }catch(_){}
+  dragging = true; path = [i]; startIdx = i; movedOff = false; pointer = p;
+  setMsg(""); highlight(); renderCurrent();
+});
+$("wheel").addEventListener("pointermove", function(e){
+  if (!dragging) return;
+  var p = localXY(e); pointer = p;
+  var i = hitTest(p[0], p[1]);
+  if (i >= 0){
+    var pos = path.indexOf(i);
+    if (pos < 0){ path.push(i); movedOff = true; }
+    else if (pos === path.length-2){ path.pop(); }
+  }
+  highlight(); renderCurrent();
+});
+function endDrag(){
+  if (!dragging) return;
+  dragging = false; pointer = null;
+  if (path.length >= 2 || movedOff){
+    var seq = path.slice(); path = []; tapSeq = [];
+    highlight(); renderCurrent(); submit(seq);
+  } else {
+    var i = startIdx; path = [];
+    var pos = tapSeq.indexOf(i);
+    if (pos === tapSeq.length-1 && pos >= 0) tapSeq.pop();
+    else if (pos < 0) tapSeq.push(i);
+    highlight(); renderCurrent();
+    if (tapSeq.length === cur.n){ var s = tapSeq.slice(); tapSeq = []; submit(s); }
+  }
+}
+$("wheel").addEventListener("pointerup", endDrag);
+$("wheel").addEventListener("pointercancel", endDrag);
+
+$("shuffleBtn").addEventListener("click", function(){
+  if (locked) return;
+  tapSeq = [];
+  for (var i=letters.length-1;i>0;i--){ var j = Math.floor(Math.random()*(i+1)); var x = letters[i]; letters[i] = letters[j]; letters[j] = x; }
+  renderWheel(); renderCurrent();
+});
+$("clearBtn").addEventListener("click", function(){ tapSeq = []; highlight(); renderCurrent(); setMsg(""); });
+
+/* ---------- Checking ---------- */
+function wrong(){
+  setMsg(t("wrong"));
+  var b = $("boxes"); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
+  highlight(); renderCurrent();
+}
+function submit(seq){
+  var word = seq.map(function(i){ return letters[i]; }).join("");
+  if (word.length !== cur.n){ if (word.length >= 2) wrong(); return; }
+  hash(word).then(function(h){
+    if (h === cur.a) win(word); else wrong();
+  });
+}
+function win(word){
+  locked = true; $("wheel").classList.add("locked");
+  tapSeq = []; highlight(); renderCurrent(); setMsg("");
+  renderBoxes(word);
+  confetti();
+  if (mode === "friend") showReply(word);
+  else showDemoNext();
+}
+function showReply(word){
+  var msg = t("reply_msg", {w: word});
+  $("foundTitle").textContent = t("found");
+  $("replyTxt").textContent = msg;
+  var box = $("replyBtns"); box.innerHTML = "";
+  function add(cls, label, fn){ var b = document.createElement("button"); b.className = "btn "+cls; b.textContent = label; b.addEventListener("click", fn); box.appendChild(b); return b; }
+  var siteUrl = location.origin + location.pathname;
+  var wa = function(){ location.href = "https://wa.me/?text=" + encodeURIComponent(msg); };
+  var tg = function(){ location.href = "https://t.me/share/url?url=" + encodeURIComponent(siteUrl) + "&text=" + encodeURIComponent(msg); };
+  if (payload.c === "tg"){ add("tg", t("send_tg"), tg); add("wa", t("send_wa"), wa); }
+  else { add("wa", t("send_wa"), wa); }
+  if (navigator.share) add("ghost", t("send_other"), function(){ navigator.share({text: msg}).catch(function(){}); });
+  var cp = add("ghost", t("copy"), function(){
+    var done = function(){ cp.textContent = t("copied"); };
+    if (navigator.clipboard) navigator.clipboard.writeText(msg).then(done, function(){});
+    else { var ta = document.createElement("textarea"); ta.value = msg; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); done(); }catch(_){ } ta.remove(); }
+  });
+  $("success").classList.remove("hidden");
+  $("cta").classList.remove("hidden");
+  setTimeout(function(){ $("success").scrollIntoView({behavior:"smooth", block:"center"}); }, 400);
+}
+function showDemoNext(){
+  if (demoIdx < DEMO.length-1){
+    $("nextTitle").textContent = t("found");
+    $("nextBtn").textContent = t("next") + " →";
+    $("nextCard").classList.remove("hidden");
+    setTimeout(function(){ $("nextCard").scrollIntoView({behavior:"smooth", block:"center"}); }, 300);
+  } else {
+    $("ctaTitle").textContent = t("demo_end");
+    $("cta").classList.remove("hidden");
+    $("controls").classList.add("hidden");
+    setTimeout(function(){ $("cta").scrollIntoView({behavior:"smooth", block:"center"}); }, 300);
+  }
+}
+$("nextBtn").addEventListener("click", function(){ window.scrollTo({top:0, behavior:"smooth"}); startDemo(demoIdx+1); });
+
+/* ---------- Confetti ---------- */
+function confetti(){
+  var c = $("cf"), ctx = c.getContext("2d"), W = c.width = innerWidth, H = c.height = innerHeight;
+  var cols = ["#f28c28","#ffc04d","#2f9e57","#2aa1da","#fbf3e4","#d64532"], ps = [];
+  for (var i=0;i<130;i++) ps.push({x:W/2, y:H*0.35, vx:(Math.random()-.5)*11, vy:-Math.random()*11-3, s:Math.random()*7+4, r:Math.random()*6, vr:(Math.random()-.5)*.3, c:cols[i%cols.length]});
+  var t0 = performance.now();
+  (function frame(now){
+    var el = now - t0; ctx.clearRect(0,0,W,H);
+    ps.forEach(function(p){ p.vy += .28; p.x += p.vx; p.y += p.vy; p.r += p.vr; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.globalAlpha = Math.max(0, 1 - el/2600); ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); ctx.restore(); });
+    if (el < 2600) requestAnimationFrame(frame); else ctx.clearRect(0,0,W,H);
+  })(t0);
+}
+
+window.addEventListener("resize", function(){ if (cur){ renderWheel(); if (!locked) renderBoxes(); } });
+
+if (mode === "friend") startFriend(); else startDemo(0);
+})();
+</script>
+</body>
+</html>
