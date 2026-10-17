@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.rork.wordjourney",
+      "sha256_cert_fingerprints": [
+        "42:ED:EE:83:E4:98:BE:85:9E:8C:FD:DF:2C:B0:1B:0C:37:97:31:8A:E5:A8:43:62:3C:D5:AB:6E:2B:0F:23:33"
+      ]
+    }
+  }
+]
