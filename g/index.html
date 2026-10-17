@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Word Journey – Group Invitation</title>
+<meta property="og:title" content="Word Journey – Group invitation">
+<meta property="og:description" content="Join my word group! Race your friends every week in Word Journey.">
+<meta property="og:image" content="https://wordjourneygame.github.io/og-image.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#3b2a1a">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f3e6c4;--paper2:#e8d5a6;--ink:#3b2a1a;--soft:#6b5236;--wax:#8e2424;--wax2:#6d1919;--gold:#b8892f;--bg:#2a1d12}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,#4a3420,var(--bg));font-family:Lora,Georgia,serif;color:var(--ink);display:flex;justify-content:center;padding:24px 16px}
+  .card{width:100%;max-width:420px;background:linear-gradient(180deg,var(--paper),var(--paper2));border:2px solid var(--gold);border-radius:18px;padding:24px 20px 20px;box-shadow:0 12px 40px rgba(0,0,0,.45),inset 0 0 40px rgba(120,80,30,.25);text-align:center}
+  .tiki{width:96px;height:96px;object-fit:contain;margin:-4px auto 4px;display:block}
+  h1{font-family:Cinzel,Georgia,serif;font-size:22px;margin:4px 0 6px}
+  .gname{font-family:Cinzel,Georgia,serif;font-size:24px;color:var(--wax);margin:10px 0 2px;word-break:break-word}
+  .by{font-size:14px;color:var(--soft);margin:0 0 12px}
+  .desc{font-size:15px;line-height:1.45;margin:0 0 16px}
+  .codebox{border:1.5px dashed var(--soft);border-radius:12px;padding:10px;margin:0 0 16px;background:rgba(255,255,255,.25)}
+  .codelabel{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+  .code{font-family:"Courier New",monospace;font-size:30px;font-weight:700;letter-spacing:.18em;margin:4px 0 8px}
+  button,a.btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font:600 16px Lora,Georgia,serif;text-decoration:none;cursor:pointer;margin:0 0 10px}
+  .primary{background:linear-gradient(180deg,var(--wax),var(--wax2));color:#fbeed0;box-shadow:0 3px 0 #4a1010}
+  .secondary{background:transparent;color:var(--ink);border:1.5px solid var(--ink)!important}
+  .small{display:inline-block;width:auto;padding:6px 14px;font-size:14px;background:var(--ink);color:var(--paper);margin:0}
+  .hint,.notice{font-size:13px;color:var(--soft);line-height:1.4;margin:6px 0 0}
+  .notice{background:rgba(142,36,36,.1);border-radius:10px;padding:10px;color:var(--wax2);margin:0 0 12px}
+  .hidden{display:none!important}
+  [dir=rtl] .code{direction:ltr}
+</style>
+</head>
+<body>
+<main class="card">
+  <img class="tiki" src="/tiki.png" alt="" onerror="this.remove()">
+  <h1 id="heading"></h1>
+  <div id="validBlock">
+    <div class="gname" id="gname"></div>
+    <p class="by" id="byLine"></p>
+    <p class="desc" id="desc"></p>
+    <div class="codebox">
+      <div class="codelabel" id="codeLabel"></div>
+      <div class="code" id="code"></div>
+      <button class="small" id="copyBtn" type="button"></button>
+    </div>
+  </div>
+  <p class="notice hidden" id="notice"></p>
+  <a class="btn primary hidden" id="joinBtn" href="#"></a>
+  <a class="btn secondary" id="playBtn" href="#"></a>
+  <p class="hint" id="hint"></p>
+</main>
+<script>
+(function(){
+  var PKG = "com.rork.wordjourney";
+  var HOST = "wordjourneygame.github.io";
+  var T = {
+    en:{heading:"You're invited to a group!",invitedBy:"Invited by",desc:"Race your friends every week: solve word puzzles and climb your group's leaderboard.",code:"Group code",join:"Join the group",play:"Get it on Google Play",copy:"Copy code",copied:"Copied!",hint:"If the app doesn't open, install Word Journey and enter this code on the Groups screen.",ios:"Word Journey is currently available only on Android phones.",invalid:"This invitation link is incomplete. Ask your friend to send it again.",defName:"Word Journey group"},
+    tr:{heading:"Bir gruba davet edildin!",invitedBy:"Davet eden",desc:"Her hafta arkadaşlarınla yarış: kelime bulmacalarını çöz, grubunun sıralamasında yüksel.",code:"Grup kodu",join:"Gruba katıl",play:"Google Play'den indir",copy:"Kodu kopyala",copied:"Kopyalandı!",hint:"Uygulama açılmazsa Word Journey'i indir ve bu kodu Gruplar ekranına gir.",ios:"Word Journey şu an yalnızca Android telefonlarda var.",invalid:"Bu davet bağlantısı eksik. Arkadaşından tekrar göndermesini iste.",defName:"Word Journey grubu"},
+    es:{heading:"¡Te invitaron a un grupo!",invitedBy:"Invitación de",desc:"Compite con tus amigos cada semana: resuelve puzles de palabras y sube en la clasificación de tu grupo.",code:"Código del grupo",join:"Unirme al grupo",play:"Descárgalo en Google Play",copy:"Copiar código",copied:"¡Copiado!",hint:"Si la app no se abre, instala Word Journey e introduce este código en la pantalla Grupos.",ios:"Por ahora, Word Journey solo está disponible para teléfonos Android.",invalid:"Este enlace de invitación está incompleto. Pide a tu amigo que lo envíe de nuevo.",defName:"Grupo de Word Journey"},
+    pt:{heading:"Você foi convidado para um grupo!",invitedBy:"Convite de",desc:"Dispute com seus amigos toda semana: resolva quebra-cabeças de palavras e suba no ranking do seu grupo.",code:"Código do grupo",join:"Entrar no grupo",play:"Baixe no Google Play",copy:"Copiar código",copied:"Copiado!",hint:"Se o app não abrir, instale o Word Journey e digite este código na tela Grupos.",ios:"No momento, o Word Journey está disponível apenas para celulares Android.",invalid:"Este link de convite está incompleto. Peça ao seu amigo para enviá-lo novamente.",defName:"Grupo do Word Journey"},
+    hi:{heading:"आपको एक ग्रुप में बुलाया गया है!",invitedBy:"आमंत्रित करने वाले",desc:"हर हफ़्ते दोस्तों से मुकाबला करें: शब्द पहेलियाँ हल करें और अपने ग्रुप की रैंकिंग में ऊपर जाएँ।",code:"ग्रुप कोड",join:"ग्रुप में शामिल हों",play:"Google Play से पाएँ",copy:"कोड कॉपी करें",copied:"कॉपी हो गया!",hint:"अगर ऐप नहीं खुलता, तो Word Journey इंस्टॉल करें और यह कोड ग्रुप स्क्रीन पर डालें।",ios:"Word Journey अभी केवल Android फ़ोन पर उपलब्ध है।",invalid:"यह आमंत्रण लिंक अधूरा है। अपने दोस्त से इसे फिर से भेजने को कहें।",defName:"Word Journey ग्रुप"},
+    id:{heading:"Kamu diundang ke sebuah grup!",invitedBy:"Diundang oleh",desc:"Berlomba dengan teman setiap minggu: pecahkan teka-teki kata dan naiki peringkat grupmu.",code:"Kode grup",join:"Gabung ke grup",play:"Dapatkan di Google Play",copy:"Salin kode",copied:"Tersalin!",hint:"Jika aplikasi tidak terbuka, pasang Word Journey lalu masukkan kode ini di layar Grup.",ios:"Saat ini Word Journey hanya tersedia untuk ponsel Android.",invalid:"Tautan undangan ini tidak lengkap. Minta temanmu mengirimnya lagi.",defName:"Grup Word Journey"},
+    vi:{heading:"Bạn được mời vào một nhóm!",invitedBy:"Người mời",desc:"Thi đua cùng bạn bè mỗi tuần: giải câu đố chữ và leo lên bảng xếp hạng của nhóm.",code:"Mã nhóm",join:"Tham gia nhóm",play:"Tải trên Google Play",copy:"Sao chép mã",copied:"Đã sao chép!",hint:"Nếu ứng dụng không mở, hãy cài Word Journey rồi nhập mã này trong màn hình Nhóm.",ios:"Hiện Word Journey chỉ có trên điện thoại Android.",invalid:"Liên kết mời này chưa đầy đủ. Hãy nhờ bạn gửi lại.",defName:"Nhóm Word Journey"},
+    ru:{heading:"Вас пригласили в группу!",invitedBy:"Приглашение от",desc:"Соревнуйтесь с друзьями каждую неделю: решайте словесные головоломки и поднимайтесь в рейтинге группы.",code:"Код группы",join:"Вступить в группу",play:"Скачать в Google Play",copy:"Скопировать код",copied:"Скопировано!",hint:"Если приложение не открылось, установите Word Journey и введите этот код на экране «Группы».",ios:"Сейчас Word Journey доступна только на телефонах Android.",invalid:"Ссылка-приглашение неполная. Попросите друга отправить её ещё раз.",defName:"Группа Word Journey"},
+    fr:{heading:"Tu es invité(e) dans un groupe !",invitedBy:"Invitation de",desc:"Affronte tes amis chaque semaine : résous des énigmes de mots et grimpe au classement de ton groupe.",code:"Code du groupe",join:"Rejoindre le groupe",play:"Disponible sur Google Play",copy:"Copier le code",copied:"Copié !",hint:"Si l'application ne s'ouvre pas, installe Word Journey puis saisis ce code dans l'écran Groupes.",ios:"Pour l'instant, Word Journey n'est disponible que sur les téléphones Android.",invalid:"Ce lien d'invitation est incomplet. Demande à ton ami de le renvoyer.",defName:"Groupe Word Journey"},
+    de:{heading:"Du wurdest in eine Gruppe eingeladen!",invitedBy:"Eingeladen von",desc:"Tritt jede Woche gegen deine Freunde an: Löse Worträtsel und steig in der Rangliste deiner Gruppe auf.",code:"Gruppencode",join:"Gruppe beitreten",play:"Jetzt bei Google Play",copy:"Code kopieren",copied:"Kopiert!",hint:"Falls sich die App nicht öffnet, installiere Word Journey und gib diesen Code auf dem Bildschirm „Gruppen“ ein.",ios:"Word Journey gibt es derzeit nur für Android-Handys.",invalid:"Dieser Einladungslink ist unvollständig. Bitte deinen Freund, ihn noch einmal zu senden.",defName:"Word-Journey-Gruppe"},
+    th:{heading:"คุณได้รับคำเชิญเข้ากลุ่ม!",invitedBy:"เชิญโดย",desc:"แข่งกับเพื่อนทุกสัปดาห์: ไขปริศนาคำศัพท์และไต่อันดับในกลุ่มของคุณ",code:"รหัสกลุ่ม",join:"เข้าร่วมกลุ่ม",play:"ดาวน์โหลดบน Google Play",copy:"คัดลอกรหัส",copied:"คัดลอกแล้ว!",hint:"หากแอปไม่เปิด ให้ติดตั้ง Word Journey แล้วป้อนรหัสนี้ในหน้ากลุ่ม",ios:"ขณะนี้ Word Journey มีให้ใช้งานบนโทรศัพท์ Android เท่านั้น",invalid:"ลิงก์คำเชิญนี้ไม่สมบูรณ์ โปรดขอให้เพื่อนส่งมาอีกครั้ง",defName:"กลุ่ม Word Journey"},
+    ko:{heading:"그룹에 초대받았어요!",invitedBy:"초대한 사람",desc:"매주 친구들과 겨뤄 보세요: 단어 퍼즐을 풀고 그룹 순위를 올리세요.",code:"그룹 코드",join:"그룹 참여하기",play:"Google Play에서 받기",copy:"코드 복사",copied:"복사됨!",hint:"앱이 열리지 않으면 Word Journey를 설치한 뒤 그룹 화면에서 이 코드를 입력하세요.",ios:"Word Journey는 현재 Android 휴대폰에서만 이용할 수 있어요.",invalid:"초대 링크가 불완전해요. 친구에게 다시 보내 달라고 요청하세요.",defName:"Word Journey 그룹"},
+    ja:{heading:"グループに招待されました!",invitedBy:"招待者",desc:"毎週友だちと競争しよう:単語パズルを解いて、グループのランキングを上げよう。",code:"グループコード",join:"グループに参加",play:"Google Play で入手",copy:"コードをコピー",copied:"コピーしました!",hint:"アプリが開かない場合は、Word Journey をインストールして、グループ画面でこのコードを入力してください。",ios:"Word Journey は現在 Android スマートフォンのみ対応しています。",invalid:"この招待リンクは不完全です。友だちにもう一度送ってもらってください。",defName:"Word Journey グループ"},
+    zh:{heading:"你被邀請加入群組!",invitedBy:"邀請人",desc:"每週和朋友一較高下:解開單字謎題,在群組排行榜上往上爬。",code:"群組代碼",join:"加入群組",play:"在 Google Play 下載",copy:"複製代碼",copied:"已複製!",hint:"如果應用程式沒有開啟,請安裝 Word Journey,並在「群組」畫面輸入此代碼。",ios:"Word Journey 目前僅支援 Android 手機。",invalid:"這個邀請連結不完整,請朋友再傳一次。",defName:"Word Journey 群組"},
+    ar:{heading:"تمت دعوتك إلى مجموعة!",invitedBy:"الدعوة من",desc:"تنافس مع أصدقائك كل أسبوع: حُلّ ألغاز الكلمات وتقدّم في ترتيب مجموعتك.",code:"رمز المجموعة",join:"انضم إلى المجموعة",play:"احصل عليه من Google Play",copy:"نسخ الرمز",copied:"تم النسخ!",hint:"إذا لم يُفتح التطبيق، ثبّت Word Journey وأدخل هذا الرمز في شاشة المجموعات.",ios:"يتوفر Word Journey حاليًا على هواتف Android فقط.",invalid:"رابط الدعوة هذا غير مكتمل. اطلب من صديقك إرساله مرة أخرى.",defName:"مجموعة Word Journey"}
+  };
+
+  function pickLang(){
+    var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || "en"];
+    for (var i=0;i<list.length;i++){
+      var base = String(list[i]).toLowerCase().split("-")[0];
+      if (T[base]) return base;
+    }
+    return "en";
+  }
+  var lang = pickLang(), t = T[lang];
+  document.documentElement.lang = lang;
+  if (lang === "ar") document.documentElement.dir = "rtl";
+
+  function clean(s, max){ return String(s||"").replace(/[\u0000-\u001f<>]/g,"").replace(/\s+/g," ").trim().slice(0,max); }
+  var p = new URLSearchParams(location.search);
+  var code = clean(p.get("c"),12).toUpperCase();
+  var valid = /^[A-Z0-9]{4,10}$/.test(code);
+  var name = clean(p.get("n"),30) || t.defName;
+  var by = clean(p.get("by"),16);
+
+  var ua = navigator.userAgent || "";
+  var isAndroid = /Android/i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+
+  var ref = "utm_source=group_invite&utm_medium=link" + (valid ? "&group_code=" + code : "");
+  var playUrl = "https://play.google.com/store/apps/details?id=" + PKG + "&referrer=" + encodeURIComponent(ref);
+  var intentUrl = "intent://" + HOST + "/g/?c=" + encodeURIComponent(code) +
+    "#Intent;scheme=https;package=" + PKG + ";S.browser_fallback_url=" + encodeURIComponent(playUrl) + ";end";
+
+  function $(id){ return document.getElementById(id); }
+  $("heading").textContent = t.heading;
+  $("playBtn").textContent = t.play;
+  $("playBtn").href = playUrl;
+
+  if (!valid){
+    $("validBlock").classList.add("hidden");
+    $("notice").textContent = t.invalid;
+    $("notice").classList.remove("hidden");
+    $("hint").classList.add("hidden");
+    return;
+  }
+
+  $("gname").textContent = name;
+  if (by) $("byLine").textContent = t.invitedBy + ": " + by; else $("byLine").classList.add("hidden");
+  $("desc").textContent = t.desc;
+  $("codeLabel").textContent = t.code;
+  $("code").textContent = code;
+  $("copyBtn").textContent = t.copy;
+  $("hint").textContent = t.hint;
+
+  if (isAndroid){
+    $("joinBtn").textContent = t.join;
+    $("joinBtn").href = intentUrl;
+    $("joinBtn").classList.remove("hidden");
+  } else if (isIOS){
+    $("notice").textContent = t.ios;
+    $("notice").classList.remove("hidden");
+    $("playBtn").classList.add("hidden");
+    $("hint").classList.add("hidden");
+  }
+
+  $("copyBtn").addEventListener("click", function(){
+    function done(){ $("copyBtn").textContent = t.copied; setTimeout(function(){ $("copyBtn").textContent = t.copy; }, 1800); }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(done, fallback);
+    } else fallback();
+    function fallback(){
+      var ta = document.createElement("textarea"); ta.value = code; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>
