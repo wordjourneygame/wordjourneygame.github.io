@@ -1,11 +1,16 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.rork.wordjourney",
       "sha256_cert_fingerprints": [
-        "42:ED:EE:83:E4:98:BE:85:9E:8C:FD:DF:2C:B0:1B:0C:37:97:31:8A:E5:A8:43:62:3C:D5:AB:6E:2B:0F:23:33"
+        "42:ED:EE:83:E4:98:BE:85:9E:8C:FD:DF:2C:B0:1B:0C:37:97:31:8A:E5:A8:43:62:3C:D5:AB:6E:2B:0F:23:33",
+        "C9:12:A1:27:24:A8:49:E3:77:D9:D7:4E:E4:90:7B:93:8F:7E:CD:91:2D:39:50:72:C6:BF:A6:FF:63:BE:70:9A",
+        "4C:C1:EE:BD:9A:61:AF:35:78:02:C6:49:EC:C8:A4:5E:C1:34:EB:36:81:1B:71:AA:BE:4D:40:B2:A8:8C:EE:F3",
+        "EE:77:B8:40:4C:D7:C8:AD:75:8F:73:8B:62:6C:12:0E:39:AC:5A:10:F5:A5:45:B8:E4:33:31:3F:86:FA:03:13"
       ]
     }
   }
