@@ -13,5 +13,19 @@
         "EE:77:B8:40:4C:D7:C8:AD:75:8F:73:8B:62:6C:12:0E:39:AC:5A:10:F5:A5:45:B8:E4:33:31:3F:86:FA:03:13"
       ]
     }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.wordjourneygame.blockleague",
+      "sha256_cert_fingerprints": [
+        "67:A8:DE:81:B7:82:25:51:73:A7:CF:8C:82:E4:3A:9D:5B:7B:00:41:31:8D:8E:E0:05:E0:04:DE:E0:15:23:0E",
+        "1D:05:14:78:EB:5A:D3:43:36:FC:F5:83:8B:0A:E5:5A:2B:06:8B:1E:EE:35:D6:FC:70:FE:FB:D3:87:4C:B0:3F",
+        "46:C2:A5:40:6B:72:D5:CB:C6:8F:0E:BA:91:12:76:7F:98:B9:E9:F6:F5:80:BF:5E:6C:29:43:7D:31:EF:E7:64"
+      ]
+    }
   }
 ]
