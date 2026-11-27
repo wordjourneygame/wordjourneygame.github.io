@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["2783G85972.io.github.wordjourneygame.blockleague"],
+        "components": [
+          { "/": "/bl/invite*" }
+        ],
+        "appID": "2783G85972.io.github.wordjourneygame.blockleague",
+        "paths": ["/bl/invite*"]
+      }
+    ]
+  }
+}
